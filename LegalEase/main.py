@@ -1,0 +1,34 @@
+from fastapi import FastAPI
+from fastapi.middleware.cors import CORSMiddleware
+from routes import router
+
+app = FastAPI(
+    title="LegalEase API",
+    description="AI-powered legal document generator",
+    version="1.0.0",
+)
+
+app.add_middleware(
+    CORSMiddleware,
+    allow_origins=["*"],  # Restrict this to your Streamlit URL in production.
+    allow_credentials=True,
+    allow_methods=["*"],
+    allow_headers=["*"],
+)
+
+app.include_router(router)
+
+
+@app.get("/")
+def root():
+    return {
+        "name": "LegalEase",
+        "status": "running",
+        "docs": "/docs",
+        "generate_endpoint": "POST /generate",
+    }
+
+
+@app.get("/health")
+def health():
+    return {"status": "ok"}
